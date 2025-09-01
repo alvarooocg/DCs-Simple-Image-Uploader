@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 import './App.css'
+
 import Top from './components/Top'
-import Main from './components/Main'
+import Container from './components/Container'
 
 function App() {
   const [light, setLight] = useState(true)
@@ -14,7 +15,7 @@ function App() {
   return (
     <div className='html'>
       <Top light={light} changeMode={changeMode} />
-      <Main light={light} />
+      <Container light={light} />
     </div>
   )
 }

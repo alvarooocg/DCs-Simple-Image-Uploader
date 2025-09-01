@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import ShareLogo from '../assets/Link.svg'
 import DownloadLogo from '../assets/download.svg'
 
-const Uploaded = ({ light, uploadedImage }) => {
+const Uploaded = ({ light, uploadedImage, copyUrl }) => {
     const [imageUrl, setImageUrl] = useState(null)
 
     const inputBackgroundColor = light ? '#FFFFFF' : '#212936'
@@ -24,7 +24,7 @@ const Uploaded = ({ light, uploadedImage }) => {
                 {imageUrl && <img className='image-uploaded' src={imageUrl} alt="Uploaded image" />}
             </div>
             <div className="btns-container">
-                <button className="share-btn">
+                <button className="share-btn" onClick={ copyUrl() }>
                     <img src={ShareLogo} className='btn-image' alt="Share button" />
                     <p className='btn-text'>Share</p>
                 </button>

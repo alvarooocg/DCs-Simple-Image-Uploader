@@ -1,30 +1,77 @@
-import React, {useCallback, useRef, useState} from "react"
+import React, {useCallback, useRef, useState, useEffect} from "react"
 import {useDropzone} from 'react-dropzone'
 import InputImage from '../assets/exit.svg'
+
+import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from 'react-router-dom'
+
+import imageServices from '../services/images'
+
+import { v4 as uuidv4 } from 'uuid'
 
 import Loading from "./Uploading"
 import Uploaded from "./Uploaded"
 
-const Main = ({ light }) => {
+const Container = ({ light }) => {
     const inputRef = useRef(null)
     const [loading, setLoading] = useState(false)
     const [loaded, setLoaded] = useState(false)
     const [file, setFile] = useState(null)
+
+    const { id } = useParams()
+    const [newId, setNewId] = useState('')
+  
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (id) {
+        imageServices.getById(id).then(image => {
+            setFile(image.file)
+        }).catch(error => {
+            console.error('Error loading image: ', error)
+        })
+        } else {
+            setFile(null)
+        }
+    }, [id])
+
+    
+    const uploadImage = async (uploadedFile) => {
+        try {
+            const generatedId = uuidv4()
+            setNewId(generatedId)
+            const newImage = {
+                id: generatedId,
+                file: uploadedFile
+            }
+
+            await imageServices.create(newImage)
+            navigate(`/${generatedId}`)
+        } catch (error) {
+            console.error('Error sharing image: ', error)
+        }
+    }
+
+    const copyUrl = () => {
+        navigator.clipboard.writeText(window.location.href)
+    }
+    
 
     const onDrop = useCallback((acceptedFiles, fileRejections) => {
         if (fileRejections.lenght > 0) {
             alert("Archivo no válido. Solo se admiten formatos JPG, PNG, GIF y máximo 2MB.")
             return
         }
+        
+        const uploadedFile = acceptedFiles[0]
+        console.log("ACCEPTED FILES => ", uploadedFile)
 
-        setFile(acceptedFiles[0])
-
-        console.log(file)
+        setFile(uploadedFile)
         setLoading(true)
 
         setTimeout(() => {
             setLoading(false)
             setLoaded(true)
+            uploadImage(uploadedFile)
         }, 3000)
     }, [])
 
@@ -45,8 +92,6 @@ const Main = ({ light }) => {
     const borderColor = light ? '#E5E7EB' : '#4D5562'
 
     const handleBrowseClick = (e) => {
-        console.log('CLICKED')
-
         e.stopPropagation()
         if (inputRef.current) {
             inputRef.current.click()
@@ -59,7 +104,7 @@ const Main = ({ light }) => {
             style={{
                 backgroundColor: backgroundColor
             }}>
-                <Uploaded light={light} uploadedImage={file} />
+                <Uploaded light={light} uploadedImage={file} copyUrl={copyUrl} />
             </div>
         )
     }
@@ -108,4 +153,4 @@ const Main = ({ light }) => {
     }     
 }
 
-export default Main
+export default Container
