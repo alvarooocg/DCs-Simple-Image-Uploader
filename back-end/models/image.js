@@ -7,16 +7,29 @@ const imageSchema = new mongoose.Schema({
         unique: true
     },
     file: {
-        type: Buffer,
+        type: String,
         required: true
+    },
+    fileName: {
+        type: String,
+        required: false
+    },
+    fileType: {
+        type: String,
+        required: false
+    },
+    uploadDate: {
+        type: Date,
+        default: Date.now
     }
 })
 
 imageSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
+        returnedObject.id = returnedObject.id
         delete returnedObject._id
-        delete returnedObject._v
+        delete returnedObject.__v
+        return returnedObject
     }
 })
 

@@ -24,24 +24,49 @@ const Container = ({ light }) => {
 
     useEffect(() => {
         if (id) {
-        imageServices.getById(id).then(image => {
-            setFile(image.file)
-        }).catch(error => {
-            console.error('Error loading image: ', error)
-        })
-        } else {
+            imageServices.getById(id).then(image => {
+                if (image.file) {
+                    if (typeof image.file === 'string') {
+                        setFile(`data:image/*;base64,${image.file}`)
+                    } else {
+                        const base64String = btoa(
+                            String.fromCharCode(...new Uint8Array(image.file.data))
+                        )
+                        setFile(`data:image/*;base64,${base64String}`)
+                    }
+                }
+            }).catch(error => {
+                console.error('Error loading image: ', error)
+            })
+        } else {
             setFile(null)
         }
     }, [id])
 
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = () => {
+                const base64 = reader.result.split(',')[1]
+                resolve(base64)
+            }
+            reader.onerror = error => reject(error)
+        })
+    }
     
     const uploadImage = async (uploadedFile) => {
         try {
             const generatedId = uuidv4()
             setNewId(generatedId)
+
+            const base64File = await fileToBase64(uploadedFile)
+
             const newImage = {
                 id: generatedId,
-                file: uploadedFile
+                file: base64File,
+                fileName: uploadedFile.name,
+                fileType: uploadedFile.fileType
             }
 
             await imageServices.create(newImage)
@@ -49,15 +74,10 @@ const Container = ({ light }) => {
         } catch (error) {
             console.error('Error sharing image: ', error)
         }
-    }
-
-    const copyUrl = () => {
-        navigator.clipboard.writeText(window.location.href)
-    }
-    
+    }    
 
     const onDrop = useCallback((acceptedFiles, fileRejections) => {
-        if (fileRejections.lenght > 0) {
+        if (fileRejections.length > 0) {
             alert("Archivo no válido. Solo se admiten formatos JPG, PNG, GIF y máximo 2MB.")
             return
         }
@@ -98,13 +118,13 @@ const Container = ({ light }) => {
         }
     }
 
-    if (loaded === true) {
+    if (loaded === true || id) {
         return (
             <div className="main"
             style={{
                 backgroundColor: backgroundColor
             }}>
-                <Uploaded light={light} uploadedImage={file} copyUrl={copyUrl} />
+                <Uploaded light={light} uploadedImage={file} />
             </div>
         )
     }
