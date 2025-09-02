@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = import.meta.env.API_URL
+const baseUrl = import.meta.env.VITE_API_URL
 
 const create = (newImage) => {
     const request = axios.post(`${baseUrl}/api/upload`, newImage)
