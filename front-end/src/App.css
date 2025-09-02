@@ -234,3 +234,136 @@
   font-size: 1rem;
   font-weight: 500;
 }
+
+@media (max-width: 1024px) {
+  .top-container {
+    padding: 0 40px;
+    height: 65px;
+  }
+
+  .main-container,
+  .loading-container {
+    width: 400px;
+    height: auto;
+  }
+
+  .image-container {
+    max-width: 400px;
+    max-height: 300px;
+  }
+
+  .image-uploaded {
+    max-width: calc(400px - 16px);
+    max-height: calc(300px - 16px);
+  }
+}
+
+@media (max-width: 640px) {
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .top-container {
+    height: 56px;
+    padding: 0;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+    gap: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .logo-container {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .main {
+    width: 100%; 
+    height: auto;
+    min-height: calc(100dvh - 56px);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .main-container,
+  .loading-container {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .dropzone {
+    padding: 16px;
+    min-height: 220px;
+    text-align: center;
+  }
+
+  .uploaded-container {
+    gap: 16px;
+    width: 100%;
+    padding-inline: 8px;
+  }
+
+  .image-container {
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    padding: 8px;
+  }
+
+  .image-uploaded {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+  }
+
+  .loading-bar {
+    width: 100%;
+    max-width: none;
+  }
+
+  .btns-container {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .share-btn,
+  .download-btn {
+    width: 100%;
+    padding: 12px 16px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+
+  .btn-text {
+    font-size: 0.95rem;
+  }
+
+  .input-info {
+    font-size: 0.9rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
+
+  .switch {
+    width: 44px;
+    height: 44px;
+  }
+}
+
