@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import NotFoundPage from './components/NotFoundPage.jsx'
-import Uploaded from './components/Uploaded.jsx'
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
